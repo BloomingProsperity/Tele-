@@ -1,0 +1,12 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.claude/
+.tele_ai_state.db
+.tele_ai_state.db-shm
+.tele_ai_state.db-wal
+*.session
+*.session-journal
+.env
+*.log
