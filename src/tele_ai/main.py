@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import asyncio
 import contextlib
@@ -182,19 +182,25 @@ class TeleAIService:
                 return
 
             detection = self._language_detector.detect(parsed.text)
-            if detection is None:
-                LOGGER.debug("[OUT] Skipped: detection is None")
-                return
-            LOGGER.debug("[OUT] Detected: lang=%s confidence=%.3f", detection.lang_code, detection.confidence)
-            if detection.confidence < self._settings.lang_confidence_threshold:
-                LOGGER.debug("[OUT] Skipped: low confidence %.3f < %.2f", detection.confidence, self._settings.lang_confidence_threshold)
+            if detection is not None:
+                LOGGER.debug("[OUT] Detected: lang=%s confidence=%.3f", detection.lang_code, detection.confidence)
+            else:
+                LOGGER.debug("[OUT] Detection is None")
+
+            is_chinese_outgoing = (
+                detection is not None
+                and detection.lang_code == LANG_ZH
+                and detection.confidence >= self._settings.lang_confidence_threshold
+            )
+            if not is_chinese_outgoing and looks_like_chinese_text(parsed.text):
+                LOGGER.debug("[OUT] Chinese heuristic matched with low/unknown confidence.")
+                is_chinese_outgoing = True
+
+            if not is_chinese_outgoing:
+                # Non-Chinese outgoing: skip
                 return
 
-            if detection.lang_code != LANG_ZH:
-                # Non-Chinese outgoing: skip, no need to translate
-                return
-
-            # Chinese → target language: edit original message in place
+            # Chinese -> target language: edit original message in place
             target_lang = await self._state.get_target_language(
                 chat_id=parsed.chat_id,
                 default_lang=self._settings.default_target_lang,
@@ -487,3 +493,4 @@ def main() -> Any:
 
 if __name__ == "__main__":
     main()
+

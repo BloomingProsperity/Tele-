@@ -18,9 +18,14 @@ class NvidiaProvider:
 
     async def translate(self, request: TranslationRequest) -> TranslationResult:
         source = request.source_lang or LANG_AUTO
+        target_lang_prompt = (
+            "zh (Simplified Chinese, use simplified Chinese characters only)"
+            if request.target_lang.lower() == "zh"
+            else request.target_lang
+        )
         user_prompt = (
             f"Source language: {source}\n"
-            f"Target language: {request.target_lang}\n"
+            f"Target language: {target_lang_prompt}\n"
             "Output only translated text. No explanation.\n"
             "Text:\n"
             f"{sanitize_user_text(request.text)}"
