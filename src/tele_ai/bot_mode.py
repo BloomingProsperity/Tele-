@@ -440,10 +440,22 @@ def run_bot_mode(settings: Settings) -> None:
     app.run_polling(drop_pending_updates=True)
 
 
-async def run_bot_async(settings: Settings) -> None:
-    """Start the bot in async mode (for running alongside userbot)."""
-    app, _ = _build_bot_app(settings)
+async def run_bot_async(settings: Settings) -> tuple[Application, BotRuntime]:
+    """Start bot mode for the `both` runtime and return handles for shutdown."""
+    app, runtime = _build_bot_app(settings)
     await app.initialize()
+    await runtime.post_init(app)
     await app.start()
     await app.updater.start_polling(drop_pending_updates=True)
     LOGGER.info("Bot mode started (async, alongside userbot).")
+    return app, runtime
+
+
+async def stop_bot_async(app: Application, runtime: BotRuntime) -> None:
+    """Stop bot mode started by `run_bot_async`."""
+    if app.updater and app.updater.running:
+        await app.updater.stop()
+    if app.running:
+        await app.stop()
+    await runtime.post_shutdown(app)
+    await app.shutdown()

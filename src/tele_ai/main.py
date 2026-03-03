@@ -10,7 +10,7 @@ from typing import Any
 from cachetools import TTLCache
 from telethon.events.newmessage import NewMessage
 
-from tele_ai.bot_mode import run_bot_async, run_bot_mode
+from tele_ai.bot_mode import run_bot_async, run_bot_mode, stop_bot_async
 from tele_ai.config import Settings, load_settings
 from tele_ai.formatter import (
     format_incoming,
@@ -423,7 +423,7 @@ async def run_userbot(settings: Settings) -> None:
 async def run_both(settings: Settings) -> None:
     """Run bot mode and userbot mode concurrently."""
     LOGGER.info("Starting both bot and userbot modes.")
-    await run_bot_async(settings)
+    bot_app, bot_runtime = await run_bot_async(settings)
 
     state = StateStore(settings.state_db_path)
     detector = LanguageDetector()
@@ -467,6 +467,7 @@ async def run_both(settings: Settings) -> None:
         await service.run()
     finally:
         await service.close()
+        await stop_bot_async(bot_app, bot_runtime)
 
 
 def main() -> Any:
