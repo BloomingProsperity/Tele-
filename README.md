@@ -1,6 +1,6 @@
 # Tele AI Translator
 
-Telegram translator supporting both `userbot` and `bot` modes.
+Telegram + Discord translator.
 
 ## Recommended Translation Models (NVIDIA API)
 
@@ -23,6 +23,27 @@ Telegram translator supporting both `userbot` and `bot` modes.
 - `uv sync --extra dev`
 4. Run:
 - `uv run python -m tele_ai.main`
+
+## Discord Quick Start
+
+1. In `.env`, set:
+- `DISCORD_BOT_TOKEN=...`
+- `NVIDIA_API_KEY=...`
+- optional: `DISCORD_COMMAND_PREFIX=!`
+- optional: `DISCORD_OWNER_ID=<your_discord_user_id>` (limit admin commands to you)
+
+2. In Discord Developer Portal, enable:
+- `MESSAGE CONTENT INTENT`
+
+3. Invite bot to server with message read/send permissions, then run:
+- `uv run discord-ai`
+
+4. Discord commands:
+- `!ai_pause`
+- `!ai_resume`
+- `!ai_status`
+- `!tr <target_lang> <text>`
+- reply to a message with `!tr` (auto target) or `!tr en`
 
 ## Commands
 

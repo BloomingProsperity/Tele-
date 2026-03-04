@@ -11,6 +11,7 @@ requires-python = ">=3.13"
 dependencies = [
   "aiosqlite>=0.21.0",
   "cachetools>=5.5.2",
+  "discord.py>=2.6.0",
   "lingua-language-detector>=2.1.1",
   "openai>=2.0.0",
   "pydantic>=2.11.0",
@@ -28,6 +29,7 @@ dev = [
 
 [project.scripts]
 tele-ai = "tele_ai.main:main"
+discord-ai = "discord_ai.main:main"
 
 [tool.pytest.ini_options]
 pythonpath = ["src"]
@@ -35,4 +37,4 @@ testpaths = ["tests"]
 asyncio_mode = "auto"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/tele_ai"]
+packages = ["src/tele_ai", "src/discord_ai"]
