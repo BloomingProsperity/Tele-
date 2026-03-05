@@ -12,6 +12,8 @@ dependencies = [
   "aiosqlite>=0.21.0",
   "cachetools>=5.5.2",
   "discord.py>=2.6.0",
+  "fastapi>=0.116.0",
+  "httpx>=0.28.1",
   "lingua-language-detector>=2.1.1",
   "openai>=2.0.0",
   "pydantic>=2.11.0",
@@ -19,6 +21,7 @@ dependencies = [
   "python-telegram-bot>=22.0",
   "telethon>=1.41.2",
   "tenacity>=9.1.2",
+  "uvicorn>=0.35.0",
 ]
 
 [project.optional-dependencies]
@@ -30,6 +33,7 @@ dev = [
 [project.scripts]
 tele-ai = "tele_ai.main:main"
 discord-ai = "discord_ai.main:main"
+payment-bridge = "payment_bridge.main:main"
 
 [tool.pytest.ini_options]
 pythonpath = ["src"]
@@ -37,4 +41,4 @@ testpaths = ["tests"]
 asyncio_mode = "auto"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/tele_ai", "src/discord_ai"]
+packages = ["src/tele_ai", "src/discord_ai", "src/payment_bridge"]
